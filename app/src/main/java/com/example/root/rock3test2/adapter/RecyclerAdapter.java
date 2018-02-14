@@ -1,21 +1,20 @@
 package com.example.root.rock3test2.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.root.rock3test2.R;
+import com.example.root.rock3test2.acitivities.MainActivity;
 import com.example.root.rock3test2.model.Product;
 
 import java.util.List;
@@ -26,12 +25,14 @@ import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
 
-    private List<Product> moviesList;
     public Context context;
+    private List<Product> productList;
+    private List<Product> cartList;
 
-    public RecyclerAdapter(List<Product> moviesList, Context context) {
-        this.moviesList = moviesList;
-        this.context=context;
+    public RecyclerAdapter(List<Product> productList, List<Product> cartList, Context context) {
+        this.productList = productList;
+        this.context = context;
+        this.cartList = cartList;
     }
 
     @Override
@@ -45,112 +46,118 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(final RecyclerAdapter.MyViewHolder holder, final int position) {
 
-        Product dataList = moviesList.get(position);
-       // int year=Integer.valueOf(dataList.getFirstappearance());
+        final Product dataList = productList.get(position);
+        final double price = dataList.getPrice();
 
-         /*   holder.txtName.setText(dataList.getName());
-            holder.txtDueDate.setText(dataList.getFirstappearance());
-            holder.txtPriority.setText(dataList.getTeam());
-           */ holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    removeItem(position);
+        holder.txtProductNM.setText(dataList.getProduct_name());
+        holder.txtProductDescription.setText(dataList.getDescription());
+
+
+
+        String nameOfImage = dataList.getImage();
+        int resId = context.getResources().getIdentifier(nameOfImage, "drawable", context.getPackageName());
+        Bitmap bitmap2 = BitmapFactory.decodeResource(context.getResources(), resId);
+        holder.imgProduct.setImageBitmap(bitmap2);
+
+        holder.txtProductPrice.setText(context.getResources().getString(R.string.dolar) + " " + String.valueOf(price));
+        for (int i = 0; i < cartList.size(); i++) {
+                if(dataList.getSr_no()==cartList.get(i).getSr_no()){
+                    holder.txtSelectedQty.setText(String.valueOf(cartList.get(i).getQty()));
+                    holder.txtAmountPayable.setText(String.valueOf(cartList.get(i).getPrice()));
+                    holder.badge_notification_1.setText(String.valueOf(cartList.get(i).getQty()));
+                    break;
+                }
+        }
+
+        holder.ivAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int lastQty = Integer.valueOf(holder.txtSelectedQty.getText().toString());
+                int totalQty = dataList.getQty();
+
+                if (lastQty < totalQty) {
+                    int currentQty = lastQty + 1;
+                    holder.txtSelectedQty.setText(String.valueOf(currentQty));
+
+                    holder.txtAmountPayable.setText(String.valueOf(price * currentQty));
+
+
+                }else{
+                    Toast.makeText(context,"No More Stocks Available",Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+        holder.ivRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int lastQty = Integer.valueOf(holder.txtSelectedQty.getText().toString());
+
+                if (lastQty > 0) {
+                    int currentQty = lastQty - 1;
+                    holder.txtSelectedQty.setText(String.valueOf(currentQty));
+
+                    holder.txtAmountPayable.setText(String.valueOf(price * currentQty));
+
 
                 }
-            });
-            holder.btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    editItem(position);
-                }
-            });
 
+            }
+        });
+
+
+        holder.btnaddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.badge_notification_1.setText(holder.txtSelectedQty.getText().toString());
+
+
+                double _payAmount = Double.valueOf(holder.txtAmountPayable.getText().toString());
+                ((MainActivity) context).addToCart(dataList.getSr_no(), dataList.getProduct_name(), Integer.valueOf(holder.txtSelectedQty.getText().toString()), _payAmount, dataList.getQty());
+            }
+        });
     }
+
     public void removeItem(int position) {
-       // Const.Products.remove(position);
+        // Const.Products.remove(position);
         notifyItemRemoved(position);
     }
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+    @Override
     public int getItemCount() {
-        return moviesList.size();
+        return productList.size();
     }
 
-    public void editItem(final int position){
-        //pass the 'context' here
-      /*  final Dialog alertDialog = new Dialog(context);
+    public void updateRow(int position){
 
-        alertDialog.setCancelable(true);
-        alertDialog.setContentView(R.layout.lay);
-        alertDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        final EditText edtName=(EditText)alertDialog.findViewById(R.id.edtName);
-        final EditText edtDueDate=(EditText)alertDialog.findViewById(R.id.edtDueDate);
-        final EditText edtPriority=(EditText)alertDialog.findViewById(R.id.edtPriority);
-        Button btnUpdate=(Button)alertDialog.findViewById(R.id.btnUpdate);
-        Button btnCancel=(Button)alertDialog.findViewById(R.id.btnCancel);
-
-        edtName.setText(moviesList.get(position).getName());
-        edtName.setTextColor(context.getResources().getColor(R.color.red));
-        edtDueDate.setText(moviesList.get(position).getFirstappearance());
-        edtPriority.setText(moviesList.get(position).getTeam());
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.cancel();
-            }
-        });
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                if(edtName.getText().toString().equals("")){
-                    Toast.makeText(context,"Please enter Name",Toast.LENGTH_SHORT).show();
-                }else if(edtDueDate.getText().toString().equals("")){
-                    Toast.makeText(context,"Please enter DueDate",Toast.LENGTH_SHORT).show();
-                }else if(edtPriority.getText().toString().equals("")){
-                    Toast.makeText(context,"Please enter Priority",Toast.LENGTH_SHORT).show();
-                }else {
-                    Const.Products.get(position).setName(edtName.getText().toString());
-                    Const.Products.get(position).setFirstappearance(edtDueDate.getText().toString());
-                    Const.Products.get(position).setTeam(edtPriority.getText().toString());
-                    //notifyItemChanged(position);
-                    ((MainActivity) context).updateViewPager();
-                    alertDialog.cancel();
-                }
-            }
-        });
-
-
-
-        alertDialog.show();
-        */
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtName,txtDueDate,txtPriority;
-        public ConstraintLayout lyMainRow;
-        public ImageView btnDelete,btnEdit;
-       // final LinearLayout.LayoutParams params;
+
+    public  class MyViewHolder extends RecyclerView.ViewHolder {
+        public  TextView txtProductNM, txtProductDescription, txtProductPrice, txtSelectedQty, txtAmountPayable, badge_notification_1;
+
+        public ImageView ivAdd, ivRemove;
+        public Button btnaddToCart;
+        public ImageView imgProduct;
+
         public MyViewHolder(View view) {
             super(view);
-            /*lyMainRow=(ConstraintLayout)view.findViewById(R.id.lyMainRow);
-            txtName=(TextView)view.findViewById(R.id.txtName);
-            txtDueDate=(TextView)view.findViewById(R.id.txtDueDate);
-            txtPriority=(TextView)view.findViewById(R.id.txtPriority);
-            btnDelete=(ImageView)view.findViewById(R.id.btnDelete);
-            btnEdit=(ImageView)view.findViewById(R.id.btnEdit);
-            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,         ViewGroup.LayoutParams.WRAP_CONTENT);
-            /*title = (TextView) view.findViewById(R.id.title);
-            genre = (TextView) view.findViewById(R.id.genre);
-            year = (TextView) view.findViewById(R.id.year);*/
-        }
-
-        private void Layout_hide() {
-         //   params.height = 0;
-            //itemView.setLayoutParams(params); //This One.
-           // lyMainRow.setLayoutParams(params);   //Or This one.
+            txtProductNM = (TextView) view.findViewById(R.id.txtProductNM);
+            txtProductDescription = (TextView) view.findViewById(R.id.txtProductDescription);
+            txtProductPrice = (TextView) view.findViewById(R.id.txtProductPrice);
+            ivAdd = (ImageView) view.findViewById(R.id.IVadd);
+            ivRemove = (ImageView) view.findViewById(R.id.IVremove);
+            txtSelectedQty = (TextView) view.findViewById(R.id.txtSelectedQty);
+            txtAmountPayable = (TextView) view.findViewById(R.id.txtAmountPayable);
+            badge_notification_1 = (TextView) view.findViewById(R.id.badge_notification_1);
+            imgProduct =(ImageView)view.findViewById(R.id.imgProduct);
+            btnaddToCart = (Button) view.findViewById(R.id.btnaddToCart);
 
         }
+
 
     }
 }

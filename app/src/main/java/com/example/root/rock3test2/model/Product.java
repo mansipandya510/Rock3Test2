@@ -9,8 +9,18 @@ public class Product {
     private int sr_no;
     private String product_name;
     private String description;
-    private String qry;
-    private String price;
+    private int qty;
+    private double price;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    private String image;
 
     public int getSr_no() {
         return sr_no;
@@ -36,19 +46,19 @@ public class Product {
         this.description = description;
     }
 
-    public String getQry() {
-        return qry;
+    public int getQty() {
+        return qty;
     }
 
-    public void setQry(String qry) {
-        this.qry = qry;
+    public void setQty(int qty) {
+        this.qty = qty;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }

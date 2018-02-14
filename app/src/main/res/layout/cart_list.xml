@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    tools:context="com.example.root.rock3test2.acitivities.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/btn_closebtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="right|top"
+            android:src="@android:drawable/ic_delete" />
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/btn_closebtn"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cart List"
+                    android:textColor="@color/colorPrimary"
+                    android:gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textSize="18.0dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimaryDark"/>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cartLst"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:orientation="horizontal">
+
+
+            </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/txtErrorNoData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="18.0dp"
+            android:layout_weight="0.2"
+            android:visibility="gone"
+            android:textStyle="bold"
+            android:text="No Data Found In CART.."/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/prodLst"
+                android:layout_weight="0.8"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.4"
+                        android:gravity="center_vertical"
+                        android:text="Total Amount:"
+                        android:textColor="@color/white"
+                        android:textSize="16.0dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtTotalAmount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.6"
+
+                        android:gravity="center_vertical|left"
+                        android:text="0.0"
+                        android:textColor="@color/white"
+                        android:textSize="16.0dp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
